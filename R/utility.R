@@ -1,4 +1,3 @@
-
 phi <- function(y) dnorm(y)
 
 Phi <- function(y) pnorm(y)
