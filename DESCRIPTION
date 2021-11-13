@@ -1,0 +1,18 @@
+Package: aftQnP
+Title: Semi-Parametric Accelerated Failture Time Mixture Cure Model
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Isabel",
+           family = "Li",
+           role = c("aut", "cre"),
+           email = "Isabellee4555@gamil.com")
+Description: A R-package that Provides a Fitting Method for Semi-parametric AFT Mixture Cure Model using Maximum Penalised Likelihood Estimation.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Imports: 
+    dplyr,
+    magrittr,
+    stats
