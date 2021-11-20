@@ -4,37 +4,33 @@
 \alias{aftsur}
 \title{Semi-parametric Accelerated Failure Time Mixture Cure Model}
 \usage{
-aftsur(
-  formula_aft,
-  formula_logit,
-  cens_status,
-  y_L,
-  y_R,
-  data,
-  lambda = 1e-05,
-  knots = NULL
-)
+aftsur(formula, cure_var, offset = FALSE, lambda = 1e-05, knots = NULL, data)
 }
 \arguments{
-\item{formula_aft}{a formula for AFT model ~ X1 + X2.}
+\item{formula}{a formula with latency covariates on the right hand side of "~" and a \code{Surv} object as the response.}
 
-\item{formula_logit}{a formula for AFT model ~ Z1 + Z2.}
+\item{cure_var}{a formula specifies incidence covariates.}
 
-\item{cens_status}{a formula for censored status in the data with sequence: event, left, right, interval censoring. ~ delta + deltaL + deltaR + deltaI.}
+\item{offset}{if offset is \code{FALSE}, an intercept term will be added into the incidence covariates. By default, \code{offset = FALSE}.}
 
-\item{y_L}{a vector of left censored times.}
+\item{lambda}{initial value for smoothing parameter. By default, \code{lambda} = 1e-5.}
 
-\item{y_R}{a vector of right censored times.}
+\item{knots}{the number of Gaussian basis functions. If leave it as NULL, knots will be automatically chosen based on the sample size.}
 
-\item{data}{a data frame which includes survival times and variables for the AFT model and the logistic regression.}
-
-\item{lambda}{initial value for smoothing parameter. By default, lambda = 1e-5.}
-
-\item{knots}{the number of Gaussian basis function. If leave it as NULL, knots will be automatically chosen based on the sample size.}
+\item{data}{a data frame which includes survival times, covariates, censoring status.}
 }
 \value{
-fit parameter estimates, standard deviations and
+\code{aftsur} returns an object of class \code{"aftsur"}.
 }
 \description{
-A method to fit semi-parametric AFT mixture cure model using the maximum penalised likelihood estimation, where left, right, interval-censored data are allowed.
+A method to fit semi-parametric AFT mixture cure model using the maximum penalised likelihood estimation, where left, right, interval-censored data are allowed. A logistic regression is used to model the incidence.
+}
+\examples{
+require(survival)
+# load data
+data("ptces")
+# create Surv object
+formula_aft <- Surv(y_L, y_R, type = "interval2") ~ X1 + X2 + X3 - 1
+# fit model
+aftsur(formula = formula_aft, cure_var = ~ Z1 + Z2 + Z3, offset = TRUE, data = ptces)
 }

@@ -1,46 +1,63 @@
 #' Semi-parametric Accelerated Failure Time Mixture Cure Model
-#' @description A method to fit semi-parametric AFT mixture cure model using the maximum penalised likelihood estimation, where left, right, interval-censored data are allowed.
+#' @description A method to fit semi-parametric AFT mixture cure model using the maximum penalised likelihood estimation, where left, right, interval-censored data are allowed. A logistic regression is used to model the incidence.
 #'
-#' @param data a data frame which includes survival times and variables for the AFT model and the logistic regression.
-#' @param formula_aft a formula for AFT model ~ X1 + X2.
-#' @param formula_logit a formula for AFT model ~ Z1 + Z2.
-#' @param y_L a vector of left censored times.
-#' @param y_R a vector of right censored times.
-#' @param lambda initial value for smoothing parameter. By default, lambda = 1e-5.
-#' @param knots the number of Gaussian basis function. If leave it as NULL, knots will be automatically chosen based on the sample size.
-#' @param cens_status a formula for censored status in the data with sequence: event, left, right, interval censoring. ~ delta + deltaL + deltaR + deltaI.
-#' @return fit parameter estimates, standard deviations and
+#' @param formula a formula with latency covariates on the right hand side of "~" and a \code{Surv} object as the response.
+#' @param cure_var a formula specifies incidence covariates.
+#' @param offset if offset is \code{FALSE}, an intercept term will be added into the incidence covariates. By default, \code{offset = FALSE}.
+#' @param lambda initial value for smoothing parameter. By default, \code{lambda} = 1e-5.
+#' @param knots the number of Gaussian basis functions. If leave it as NULL, knots will be automatically chosen based on the sample size.
+#' @param data a data frame which includes survival times, covariates, censoring status.
+#' @return \code{aftsur} returns an object of class \code{"aftsur"}.
+#' @examples
+#' require(survival)
+#' # load data
+#' data("ptces")
+#' # create Surv object
+#' formula_aft <- Surv(y_L, y_R, type = "interval2") ~ X1 + X2 + X3 - 1
+#' # fit model
+#' aftsur(formula = formula_aft, cure_var = ~ Z1 + Z2 + Z3, offset = TRUE, data = ptces)
 #' @export
-#' @importFrom stats dnorm lm pnorm quantile qweibull rbinom runif rweibull model.frame na.omit
+#' @importFrom stats dnorm lm pnorm quantile qweibull rbinom runif rweibull model.frame na.omit model.extract model.matrix
 #' @importFrom dplyr filter mutate
+#' @importFrom survival Surv
 #'
 
 
 
-aftsur <- function(formula_aft, formula_logit, cens_status, y_L, y_R, data, lambda = 1e-5, knots = NULL){
-  deltaI <- NULL
-  num_knots <- ifelse(!is.null(knots), knots, ifelse(dim(data)[1]<500, 4, ifelse(dim(data)[1]<1000, 5, 6)))
-  X <- model.frame(formula_aft, data)
-  colnames(X) <- paste0("X", 1:dim(X)[2])
-  Z <- model.frame(formula_logit, data)
-  colnames(Z) <- paste0("Z", 1:dim(Z)[2])
-  cens_status <- model.frame(cens_status, data)
-  colnames(cens_status) <- c("delta", "deltaL",  "deltaR", "deltaI")
+aftsur <- function(formula, cure_var, offset = FALSE, lambda = 1e-5, knots = NULL, data){
+  deltaI <- y_tmp <- NULL
+  n <- dim(data)[1]
+  num_knots <- ifelse(!is.null(knots), knots, ifelse(n < 500, 4, ifelse(n < 1000, 5, 6)))
 
+  m_f <- model.frame(formula, data)
+  m_rsp <- model.extract(m_f,"response")
+  time_tab <- m_rsp[,1:2]
+  colnames(time_tab) <- c("y", "y_tmp")
+  #Z X
+  cure_name <- all.vars(cure_var)
+  Z <- as.matrix(cbind(rep(1,n),data[,cure_name]))
+  colnames(Z) <- c("intercept.z", cure_name)
+  if(offset == TRUE){Z <- as.matrix(data[,cure_name])}
+  X <- model.matrix(attr(m_f,"terms"), m_f)
+  # cured
+  fac_status <- factor(m_rsp[,3], levels = c(1, 2, 0, 3))
+  ces_status <- model.matrix(~ fac_status - 1)
+  colnames(ces_status) <- c("delta", "deltaL",  "deltaR", "deltaI")
 
-  data <- tibble(X, Z, cens_status, y_L, y_R)
-  data_tmp <- data %>% mutate(y = ifelse(deltaL!=1 , y_L, y_R))
-  data_tmp_append <- data_tmp %>% filter(deltaI==1) %>% mutate(y = y_R, deltaI = 2)
-  data <- rbind(data_tmp, data_tmp_append)
+  data_sur <-  tibble(data.frame(cbind(X, Z, time_tab, ces_status)))
+  data_append <- tibble(data_sur %>% filter(y_tmp!=1) %>% mutate(y = y_tmp, deltaI = 2))
+  data_ <- rbind(data_sur, data_append) %>% select(-y_tmp)
 
-  X <- as.matrix(data[, colnames(X)])
-  Z <- as.matrix(data[, colnames(Z)])
-  y <- data$y
-  delta <- data$delta
-  deltaL <- data$deltaL
-  deltaR <- data$deltaR
-  deltaI_L <- as.numeric(data$deltaI == 1)
-  deltaI_R <- as.numeric(data$deltaI == 2)
+  X <- as.matrix(data_[, colnames(data.frame(X))])
+  if("X.Intercept." %in% colnames(X)){colnames(X)[1] <- c("(intercept)")}
+  Z <- as.matrix(data_[, colnames(Z)])
+  if("intercept.z" %in% colnames(Z)){colnames(Z)[1] <- c("(intercept)")}
+  y <- data_$y
+  delta <- data_$delta
+  deltaL <- data_$deltaL
+  deltaR <- data_$deltaR
+  deltaI_L <- as.numeric(data_$deltaI == 1)
+  deltaI_R <- as.numeric(data_$deltaI == 2)
   MAX_CTR <- 10000
 
   gamma_update <- FALSE

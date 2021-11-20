@@ -3,14 +3,20 @@
 \docType{data}
 \name{ptces}
 \alias{ptces}
-\title{Simulated Partly interval-censored Data}
+\title{Simulated Partly Interval-censored Data}
 \format{
-An object of class \code{tbl_df} (inherits from \code{tbl}, \code{data.frame}) with 100 rows and 12 columns.
+This dataset includes 100 observations.
+\describe{
+\item{\code{X1 X2 X3}}{incidence covariates}
+\item{\code{Z1 Z2 Z3}}{latency covariates, where \code{Z1} is an intercept term}
+\item{\code{delta deltaL deltaL deltaR}}{indicators for event, left, right, and interval-censoring}
+\item{\code{y_L y_R}}{event and censoring times. For events, \code{y_L = y_R}. \code{y_L = NA} if the observation is left-censored and \code{y_R = NA} if the observation is right-censored.}
+}
 }
 \usage{
 data(ptces)
 }
 \description{
-Description_of_the_Data
+A simulated partly interval-censored dataset.
 }
 \keyword{datasets}

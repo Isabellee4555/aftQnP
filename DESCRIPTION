@@ -15,4 +15,6 @@ RoxygenNote: 7.1.1
 Imports: 
     dplyr,
     magrittr,
-    stats
+    stats,
+    ggplot2,
+    survival
