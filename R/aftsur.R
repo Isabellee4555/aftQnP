@@ -1,11 +1,11 @@
 #' Semi-parametric Accelerated Failure Time Mixture Cure Model
-#' @description A method to fit semi-parametric AFT mixture cure model using the maximum penalised likelihood estimation, where left, right, interval-censored data are allowed. A logistic regression is used to model the incidence.
+#' @description A method to fit a semi-parametric AFT mixture cure model using maximum penalised likelihood estimation, where left, right and interval-censored data are allowed. Logistic regression is used to model the incidence.
 #'
-#' @param formula a formula with latency covariates on the right hand side of "~" and a \code{Surv} object as the response.
-#' @param cure_var a formula specifies incidence covariates.
+#' @param formula a formula object which specifies the covariates for the latency part of the mixture cure model. The response must be a \code{Surv} object which is from \code{survival} package.
+#' @param cure_var a formula object which specifies the covariates for the incidence part of the mixture cure model.
 #' @param offset if offset is \code{FALSE}, an intercept term will be added into the incidence covariates. By default, \code{offset = FALSE}.
-#' @param lambda initial value for smoothing parameter. By default, \code{lambda} = 1e-5.
-#' @param knots the number of Gaussian basis functions. If leave it as NULL, knots will be automatically chosen based on the sample size.
+#' @param lambda an initial value for the smoothing parameter. By default, lambda = $10^{-5}$.
+#' @param knots an integer which specifies the number of basis functions used to estimate the baseline hazard function. By default, \code{knots = 4} if the sample size is less than 500; \code{knots = 5} if the sample size is greater than 500 but less than 1000 and \code{knots = 6} if the sample size is greater or equal to 1000.
 #' @param data a data frame which includes survival times, covariates, censoring status.
 #' @return \code{aftsur} returns an object of class \code{"aftsur"}.
 #' @examples

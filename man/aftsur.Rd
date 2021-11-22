@@ -7,15 +7,15 @@
 aftsur(formula, cure_var, offset = FALSE, lambda = 1e-05, knots = NULL, data)
 }
 \arguments{
-\item{formula}{a formula with latency covariates on the right hand side of "~" and a \code{Surv} object as the response.}
+\item{formula}{a formula object which specifies the covariates for the latency part of the mixture cure model. The response must be a \code{Surv} object which is from \code{survival} package.}
 
-\item{cure_var}{a formula specifies incidence covariates.}
+\item{cure_var}{a formula object which specifies the covariates for the incidence part of the mixture cure model.}
 
 \item{offset}{if offset is \code{FALSE}, an intercept term will be added into the incidence covariates. By default, \code{offset = FALSE}.}
 
-\item{lambda}{initial value for smoothing parameter. By default, \code{lambda} = 1e-5.}
+\item{lambda}{an initial value for the smoothing parameter. By default, lambda = $10^{-5}$.}
 
-\item{knots}{the number of Gaussian basis functions. If leave it as NULL, knots will be automatically chosen based on the sample size.}
+\item{knots}{an integer which specifies the number of basis functions used to estimate the baseline hazard function. By default, \code{knots = 4} if the sample size is less than 500; \code{knots = 5} if the sample size is greater than 500 but less than 1000 and \code{knots = 6} if the sample size is greater or equal to 1000.}
 
 \item{data}{a data frame which includes survival times, covariates, censoring status.}
 }
@@ -23,7 +23,7 @@ aftsur(formula, cure_var, offset = FALSE, lambda = 1e-05, knots = NULL, data)
 \code{aftsur} returns an object of class \code{"aftsur"}.
 }
 \description{
-A method to fit semi-parametric AFT mixture cure model using the maximum penalised likelihood estimation, where left, right, interval-censored data are allowed. A logistic regression is used to model the incidence.
+A method to fit a semi-parametric AFT mixture cure model using maximum penalised likelihood estimation, where left, right and interval-censored data are allowed. Logistic regression is used to model the incidence.
 }
 \examples{
 require(survival)

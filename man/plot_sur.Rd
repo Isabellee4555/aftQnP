@@ -2,15 +2,15 @@
 % Please edit documentation in R/plot_sur.R
 \name{plot_sur}
 \alias{plot_sur}
-\title{Predicted Survival Function Plot}
+\title{Plot Predicted Survival Function}
 \usage{
 plot_sur(fit, x = NULL)
 }
 \arguments{
 \item{fit}{a model fitted by the \code{aftsur} function.}
 
-\item{x}{a vector of latency covariates that is used to estimate survival probabilities. If \code{x = NULL}, the baseline survival will be estimated.}
+\item{x}{a vector of latency covariates that is used to estimate survival probabilities. If \code{x = NULL}, the baseline survival will be predicted.}
 }
 \description{
-plot for predicted survival probabilities from the semi-parametric AFT mixture cure model.
+a function that plots predicted survival probabilities from the semi-parametric AFT mixture cure model.
 }

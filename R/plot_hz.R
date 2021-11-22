@@ -1,7 +1,7 @@
-#' Predicted Hazard Function Plot
-#' @description plot for predicted hazard rates from the semi-parametric AFT mixture cure model.
+#' Plot Predicted Hazard Function
+#' @description a function that plots predicted hazard rates from the semi-parametric AFT mixture cure model.
 #' @param fit a model fitted by the \code{aftsur} function.
-#' @param x a vector of latency covariates that is used to estimate hazard rates. If \code{x = NULL}, the baseline hazard will be estimated.
+#' @param x a vector of latency covariates that is used to estimate hazard rates. If \code{x = NULL}, the baseline hazard will be predicted.
 #' @export
 #' @import ggplot2
 plot_hz <- function(fit, x = NULL){

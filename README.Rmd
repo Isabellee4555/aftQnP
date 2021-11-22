@@ -9,7 +9,8 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.path = "man/figures/README-",
-  out.width = "100%"
+  fig.height= 5, fig.width=5,
+  fig.align = "center"
 )
 ```
 
@@ -18,37 +19,38 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of aftQnP is to ...
+The goal of aftQnP is to provide a statistical tool to fit a semi-parametric accelerated failure time (AFT) mixture cure model. Gaussian basis functions are used to approximate the baseline hazard function and maximum penalised likelihood estimation is used to obtain regression estimates and smooth estimates of the baseline hazard. This method allows partly interval-censored data which includes events, left, right and interval-censored observations.
 
 ## Installation
 
-You can install the released version of aftQnP from [CRAN](https://CRAN.R-project.org) with:
+You can install the aftQnP package from [GitHub](https://github.com/) with:
 
 ``` r
-install.packages("aftQnP")
+install.packages("devtools")
+devtools::install_github("Isabellee4555/Isabel_Li_Mres_Thesis_Rcode")
 ```
-
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+This is a basic example which shows you how to fit a semi-parametric AFT mixture cure mode:
 
 ```{r example}
 library(aftQnP)
-## basic example code
+require(survival)
+# load data
+data("ptces")
+# create Surv object
+formula_aft <- Surv(y_L, y_R, type = "interval2") ~ X1 + X2 + X3 - 1
+# fit model
+model.fit <- aftsur(formula = formula_aft, cure_var = ~ Z1 + Z2 + Z3, offset = TRUE, data = ptces)
+
+```
+To plot a predicted survival curve:
+
+```{r survival}
+plot_sur(fit = model.fit, x = c(0.5, 2, -0.5))
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
-
-```{r cars}
-summary(cars)
+To plot a predicted hazard curve:
+```{r hazard}
+plot_hz(fit = model.fit, x = c(0.5, 2, -0.5))
 ```
-
-You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this. You could also use GitHub Actions to re-render `README.Rmd` every time you push. An example workflow can be found here: <https://github.com/r-lib/actions/tree/master/examples>.
-
-You can also embed plots, for example:
-
-```{r pressure, echo = FALSE}
-plot(pressure)
-```
-
-In that case, don't forget to commit and push the resulting figure files, so they display on GitHub and CRAN.

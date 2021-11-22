@@ -1,7 +1,7 @@
-#' Predicted Survival Function Plot
-#' @description plot for predicted survival probabilities from the semi-parametric AFT mixture cure model.
+#' Plot Predicted Survival Function
+#' @description a function that plots predicted survival probabilities from the semi-parametric AFT mixture cure model.
 #' @param fit a model fitted by the \code{aftsur} function.
-#' @param x a vector of latency covariates that is used to estimate survival probabilities. If \code{x = NULL}, the baseline survival will be estimated.
+#' @param x a vector of latency covariates that is used to estimate survival probabilities. If \code{x = NULL}, the baseline survival will be predicted.
 #' @export
 #' @import ggplot2
 plot_sur <- function(fit, x = NULL){

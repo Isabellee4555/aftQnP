@@ -2,15 +2,15 @@
 % Please edit documentation in R/plot_hz.R
 \name{plot_hz}
 \alias{plot_hz}
-\title{Predicted Hazard Function Plot}
+\title{Plot Predicted Hazard Function}
 \usage{
 plot_hz(fit, x = NULL)
 }
 \arguments{
 \item{fit}{a model fitted by the \code{aftsur} function.}
 
-\item{x}{a vector of latency covariates that is used to estimate hazard rates. If \code{x = NULL}, the baseline hazard will be estimated.}
+\item{x}{a vector of latency covariates that is used to estimate hazard rates. If \code{x = NULL}, the baseline hazard will be predicted.}
 }
 \description{
-plot for predicted hazard rates from the semi-parametric AFT mixture cure model.
+a function that plots predicted hazard rates from the semi-parametric AFT mixture cure model.
 }
