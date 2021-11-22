@@ -6,7 +6,7 @@ Authors@R:
            family = "Li",
            role = c("aut", "cre"),
            email = "Isabellee4555@gamil.com")
-Description: A R-package that Provides a Fitting Method for Semi-parametric AFT Mixture Cure Model using Maximum Penalised Likelihood Estimation.
+Description: an R-package that provides a fitting method for semi-parametric AFT mixture cure model using maximum penalised likelihood estimation.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
