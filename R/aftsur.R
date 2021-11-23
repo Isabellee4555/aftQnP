@@ -192,7 +192,7 @@ aftsur <- function(formula, cure_var, offset = FALSE, lambda = 1e-5, knots = NUL
   val$pzllh <- penalised_likelihood(val)
 
   cat("---------------------------------------------------------------------------")
-  cat("\nSemi-parametric Accelerated Failure Time Mixture Cured Model Using MPL\n")
+  cat("\nSemi-parametric Accelerated Failure Time Mixture Cure Model Using MPL\n")
   cat(paste("\nPenalised log-likelihood:", round(val$pzllh,3),"\n"))
   cat(paste("\nEstimated smoothing parameter:", round(val$lambda,3),"\n"))
   cat("=====")
