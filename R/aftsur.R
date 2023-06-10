@@ -1,8 +1,8 @@
 #' Semi-parametric Accelerated Failure Time Mixture Cure Model
-#' @description A method to fit a semi-parametric AFT mixture cure model using maximum penalised likelihood estimation, where left, right and interval-censored data are allowed. Logistic regression is used to model the incidence.
+#' @description A method to fit  a semi-parametric accelerated failure time (AFT) mixture cure model using maximum penalised likelihood estimation. This method allows for the inclusion of left, right, and interval-censored data. Logistic regression is employed to model the incidence.
 #'
-#' @param formula a formula object which specifies the covariates for the latency part of the mixture cure model. The response must be a \code{Surv} object which is from \code{survival} package.
-#' @param cure_var a formula object which specifies the covariates for the incidence part of the mixture cure model.
+#' @param formula a formula object to specify the covariates for the latency part of the mixture cure model. The response variable must be a \code{Surv} object obtained from the \code{survival} package.
+#' @param cure_var a formula object in which to specify the covariates for the incidence part of the mixture cure model.
 #' @param offset if offset is \code{FALSE}, an intercept term will be added into the incidence covariates. By default, \code{offset = FALSE}.
 #' @param lambda an initial value for the smoothing parameter. By default, lambda = $10^{-5}$.
 #' @param knots an integer which specifies the number of basis functions used to estimate the baseline hazard function. By default, \code{knots = 4} if the sample size is less than 500; \code{knots = 5} if the sample size is greater than 500 but less than 1000 and \code{knots = 6} if the sample size is greater or equal to 1000.
@@ -11,11 +11,11 @@
 #' @examples
 #' require(survival)
 #' # load data
-#' data("ptces")
-#' # create Surv object
-#' formula_aft <- Surv(y_L, y_R, type = "interval2") ~ X1 + X2 + X3 - 1
-#' # fit model
-#' aftsur(formula = formula_aft, cure_var = ~ Z1 + Z2 + Z3, offset = TRUE, data = ptces)
+#' data("simu_data")
+#' # create a formula using a Surv
+#' formula_aft <- Surv(y_L, y_R, type = "interval2") ~ X1 + X2 - 1
+#' # fit a model
+#' aftsur(formula = formula_aft, cure_var = ~ Z1 + Z2 + Z3, offset = TRUE, data = simu_data)
 #' @export
 #' @importFrom stats dnorm lm pnorm quantile qweibull rbinom runif rweibull model.frame na.omit model.extract model.matrix
 #' @importFrom dplyr filter mutate
@@ -27,7 +27,12 @@
 aftsur <- function(formula, cure_var, offset = FALSE, lambda = 1e-5, knots = NULL, data){
   deltaI <- y_tmp <- NULL
   n <- dim(data)[1]
-  num_knots <- ifelse(!is.null(knots), knots, ifelse(n < 500, 4, ifelse(n < 1000, 5, 6)))
+
+  num_knots <- ifelse(!is.null(knots), knots, case_when(
+    n < 500 ~ 4,
+    n >= 500 & n < 1000 ~ 5,
+    n >= 1000 ~ 6
+  ))
 
   m_f <- model.frame(formula, data)
   m_rsp <- model.extract(m_f,"response")
@@ -61,6 +66,7 @@ aftsur <- function(formula, cure_var, offset = FALSE, lambda = 1e-5, knots = NUL
   MAX_CTR <- 10000
 
   gamma_update <- FALSE
+  if(sum(deltaR) == 0){cured_exist <- FALSE; stop("no right-censoring is not implemented")}else{cured_exist <- TRUE}
   update_basis_params <- TRUE
   max_lambda_update <- 5
   df_prev <- -10
@@ -97,7 +103,7 @@ aftsur <- function(formula, cure_var, offset = FALSE, lambda = 1e-5, knots = NUL
       }
 
       # gamma update
-      if(sum(abs(val$beta - val_previous$beta))<1e-3){
+      if(sum(abs(val$beta - val_previous$beta))<1e-3 & cured_exist){
         gamma_update <- TRUE
       }
       if(gamma_update == TRUE){
@@ -204,8 +210,9 @@ aftsur <- function(formula, cure_var, offset = FALSE, lambda = 1e-5, knots = NUL
   cat("\nLogistic Model:\n")
   print(gamma_out)
   cat("---------------------------------------------------------------------------")
+  cat("\n")
   predicth <- list()
-  predicth[["x"]] <- seq(0, max(val$k[val$delta==1]), 0.01)
+  predicth[["x"]] <- seq(0, max(val$k[val$deltaR==0]), 0.01)
   predicth[["h"]] <- h0(predicth[["x"]], val$theta, val$basis_params)
   val$predicth <- predicth
   val

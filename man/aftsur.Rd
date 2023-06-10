@@ -7,9 +7,9 @@
 aftsur(formula, cure_var, offset = FALSE, lambda = 1e-05, knots = NULL, data)
 }
 \arguments{
-\item{formula}{a formula object which specifies the covariates for the latency part of the mixture cure model. The response must be a \code{Surv} object which is from \code{survival} package.}
+\item{formula}{a formula object to specify the covariates for the latency part of the mixture cure model. The response variable must be a \code{Surv} object obtained from the \code{survival} package.}
 
-\item{cure_var}{a formula object which specifies the covariates for the incidence part of the mixture cure model.}
+\item{cure_var}{a formula object in which to specify the covariates for the incidence part of the mixture cure model.}
 
 \item{offset}{if offset is \code{FALSE}, an intercept term will be added into the incidence covariates. By default, \code{offset = FALSE}.}
 
@@ -23,14 +23,14 @@ aftsur(formula, cure_var, offset = FALSE, lambda = 1e-05, knots = NULL, data)
 \code{aftsur} returns an object of class \code{"aftsur"}.
 }
 \description{
-A method to fit a semi-parametric AFT mixture cure model using maximum penalised likelihood estimation, where left, right and interval-censored data are allowed. Logistic regression is used to model the incidence.
+A method to fit  a semi-parametric accelerated failure time (AFT) mixture cure model using maximum penalised likelihood estimation. This method allows for the inclusion of left, right, and interval-censored data. Logistic regression is employed to model the incidence.
 }
 \examples{
 require(survival)
 # load data
-data("ptces")
-# create Surv object
-formula_aft <- Surv(y_L, y_R, type = "interval2") ~ X1 + X2 + X3 - 1
-# fit model
-aftsur(formula = formula_aft, cure_var = ~ Z1 + Z2 + Z3, offset = TRUE, data = ptces)
+data("simu_data")
+# create a formula using a Surv
+formula_aft <- Surv(y_L, y_R, type = "interval2") ~ X1 + X2 - 1
+# fit a model
+aftsur(formula = formula_aft, cure_var = ~ Z1 + Z2 + Z3, offset = TRUE, data = simu_data)
 }
