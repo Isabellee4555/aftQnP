@@ -7,10 +7,23 @@
 plot_sur(fit, x = NULL)
 }
 \arguments{
-\item{fit}{a model fitted by the \code{aftsur} function.}
+\item{fit}{an object of class "aftsur". A model fitted by the \code{aftsur} function.}
 
 \item{x}{a vector of latency covariates that is used to estimate survival probabilities. If \code{x = NULL}, the baseline survival will be predicted.}
 }
+\value{
+a \code{ggplot2} object
+}
 \description{
 a function that plots predicted survival probabilities from the semi-parametric AFT mixture cure model.
+}
+\examples{
+require(survival)
+# load data
+data("simu_data")
+# create a formula using a Surv
+formula_aft <- Surv(y_L, y_R, type = "interval2") ~ X1 + X2 - 1
+# fit a model
+aft_fit <- aftsur(formula = formula_aft, cure_var = ~ Z1 + Z2 + Z3, offset = TRUE, data = simu_data)
+plot_sur(aft_fit)
 }

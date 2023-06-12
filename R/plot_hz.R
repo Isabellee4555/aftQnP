@@ -1,7 +1,17 @@
 #' Plot Predicted Hazard Function
 #' @description a function that plots predicted hazard rates from the semi-parametric AFT mixture cure model.
-#' @param fit a model fitted by the \code{aftsur} function.
+#' @param fit an object of class "aftsur". A model fitted by the \code{aftsur} function.
 #' @param x a vector of latency covariates that is used to estimate hazard rates. If \code{x = NULL}, the baseline hazard will be predicted.
+#' @return a \code{ggplot2} object
+#' @examples
+#' require(survival)
+#' # load data
+#' data("simu_data")
+#' # create a formula using a Surv
+#' formula_aft <- Surv(y_L, y_R, type = "interval2") ~ X1 + X2 - 1
+#' # fit a model
+#' aft_fit <- aftsur(formula = formula_aft, cure_var = ~ Z1 + Z2 + Z3, offset = TRUE, data = simu_data)
+#' plot_hz(aft_fit)
 #' @export
 #' @import ggplot2
 plot_hz <- function(fit, x = NULL){
@@ -18,9 +28,9 @@ plot_hz <- function(fit, x = NULL){
   fills <- c("Hazard" = "red", "95% ASY.CI"="grey30")
   p <- ggplot(data = data.frame(x = t_grid))+
     geom_line(aes(x, y  = h_vals, col = "Hazard", lty = "Hazard")) +
-    geom_line(aes(x, y  = h_vals + 1.96*asy_h_sd, col = "95% ASY.CI", lty = "95% ASY.CI")) +
-    geom_line(aes(x, y  = h_vals - 1.96*asy_h_sd, col = "95% ASY.CI", lty = "95% ASY.CI")) +
-    geom_ribbon(aes(x = x, ymin = pmax(h_vals - 1.96*asy_h_sd, 0),ymax = pmin(h_vals + 1.96*asy_h_sd, max(h_vals))),
+    geom_line(aes(x, y  = h_vals + 1.959964*asy_h_sd, col = "95% ASY.CI", lty = "95% ASY.CI")) +
+    geom_line(aes(x, y  = h_vals - 1.959964*asy_h_sd, col = "95% ASY.CI", lty = "95% ASY.CI")) +
+    geom_ribbon(aes(x = x, ymin = pmax(h_vals - 1.959964*asy_h_sd, 0),ymax = pmin(h_vals + 1.959964*asy_h_sd, max(h_vals))),
                 fill= "Orange", alpha = 0.1)+
     theme_minimal() + xlab("Survival time (t)") + ylab(expression("Hazard rate"~ " "~h[i](t))) +
     scale_x_continuous(breaks = seq(round(max_event_t/5, ifelse(max_event_t>=3, 0, 1)),

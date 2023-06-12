@@ -19,38 +19,55 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of aftQnP is to provide a statistical tool to fit a semi-parametric accelerated failure time (AFT) mixture cure model. Gaussian basis functions are used to approximate the baseline hazard function and maximum penalised likelihood estimation is used to obtain regression estimates and smooth estimates of the baseline hazard. This method allows partly interval-censored data which includes events, left, right and interval-censored observations.
+The goal of  <code>aftQnP</code> is to provide a statistical tool for fitting a semi-parametric accelerated failure time (AFT) mixture cure model. Gaussian basis functions are employed to approximate the baseline hazard function, and maximum penalized likelihood estimation is used to obtain regression estimates and smooth estimates of the baseline hazard. This method allows for the handling of partly interval-censored data, which includes events, left-censored, right-censored, and interval-censored observations.
 
 ## Installation
 
-You can install the aftQnP package from [GitHub](https://github.com/) with:
+You can install the <code>aftQnP</code> package from [GitHub](https://github.com/) with:
 
 ``` r
 install.packages("devtools")
 devtools::install_github("Isabellee4555/Isabel_Li_Mres_Thesis_Rcode")
 ```
-## Example
+## Fit a Model using a Simulated Dataset
 
 This is a basic example which shows you how to fit a semi-parametric AFT mixture cure mode:
 
 ```{r example}
 library(aftQnP)
 require(survival)
+
 # load data
-data("ptces")
-# create Surv object
-formula_aft <- Surv(y_L, y_R, type = "interval2") ~ X1 + X2 + X3 - 1
-# fit model
-model.fit <- aftsur(formula = formula_aft, cure_var = ~ Z1 + Z2 + Z3, offset = TRUE, data = ptces)
+data("simu_data")
+
+# create a formula using a Surv
+formula_aft <- Surv(y_L, y_R, type = "interval2") ~ X1 + X2 - 1
+
+# fit a model
+aft_fit <- aftsur(formula = formula_aft, cure_var = ~ Z1 + Z2 + Z3, offset = TRUE, data = simu_data)
 
 ```
-To plot a predicted survival curve:
+
+## Summary Output
+
+```{r summary}
+summary(aft_fit)
+```
+
+## Make a Prediction
+```{r}
+predict(aft_fit, x = c(1, -1), type = "survival", time = c(0.5, 1, 1.5), interval = TRUE)
+```
+
+
+## Plot a Predicted Survival Curve
 
 ```{r survival}
-plot_sur(fit = model.fit, x = c(0.5, 2, -0.5))
+plot_sur(fit = aft_fit, x = c(1, -1))
 ```
 
-To plot a predicted hazard curve:
+## Plot a Predicted Hazard Curve
+
 ```{r hazard}
-plot_hz(fit = model.fit, x = c(0.5, 2, -0.5))
+plot_hz(fit = aft_fit, x = c(1, -1))
 ```

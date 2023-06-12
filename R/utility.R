@@ -1,3 +1,10 @@
+keep_matrix_ifnot <- function(object){
+  if(!"matrix" %in% class(object)){
+    object <- matrix(object, nrow = 1)
+  }
+  return(object)
+}
+
 phi <- function(y) dnorm(y)
 
 Phi <- function(y) pnorm(y)
@@ -9,12 +16,17 @@ psi <- function(y, basis_params)
   }else{
     tmp <- matrix(0, nrow = 0, ncol = length(basis_params$mu))
   }
+
+  tmp <- keep_matrix_ifnot(tmp)
   return(tmp)
 }
 
 Psi <- function(y, basis_params)
 {
   tmp <- sapply(1:length(basis_params$mu), function(i) sqrt(2 * pi) * basis_params$sigma[i] * (Phi((y - basis_params$mu[i]) / basis_params$sigma[i]) - Phi(- basis_params$mu[i] / basis_params$sigma[i])))
+
+  tmp <- keep_matrix_ifnot(tmp)
+
   return(tmp)
 }
 
@@ -589,7 +601,7 @@ compute_hazard_covariance <- function(val, cov_mat=NULL, k=NULL)
   psi_mat <- psi(k, val$basis_params)
   if(length(constraints) > 0)
   {
-    psi_mat_removed <- psi_mat[, -constraints]
+    psi_mat_removed <- keep_matrix_ifnot(psi_mat[, -constraints])
   } else {
     psi_mat_removed <- psi_mat
   }
@@ -608,9 +620,8 @@ compute_cumu_hazard_covariance <- function(val, cov_mat=NULL, k=NULL)
   length_full <- nrow(cov_mat)
 
   Psi_mat <- Psi(k, val$basis_params)
-  if(length(constraints) > 0)
-  {
-    Psi_mat_removed <- Psi_mat[, -constraints]
+  if(length(constraints) > 0){
+    Psi_mat_removed <- keep_matrix_ifnot(Psi_mat[, -constraints])
   } else {
     Psi_mat_removed <- Psi_mat
   }

@@ -177,40 +177,9 @@ aftsur <- function(formula, cure_var, offset = FALSE, lambda = 1e-5, knots = NUL
     j <- j + 1
   } #end out outer loop
 
-
-
   class(val) <- c("aftsur")
-  aft_beta <- t(t(val$beta))
-  logit_gamma <- t(t(val$gamma))
+  val$call <- list(latency = formula, incidence = cure_var)
 
-  sd_ <- sqrt(diag(compute_covariance_matrix(val,return_F = T)))
-  betasd <-  t(t(sd_[1:length(val$beta)]))
-  gammasd <-  t(t(sd_[(length(val$beta)+1) :(length(val$beta)+length(val$gamma))]))
-  betaz <- val$beta/betasd
-  gammaz <- val$gamma/gammasd
-  beta.pval <- pnorm(abs(betaz),lower.tail = F)*2
-  gamma.pval <- pnorm(abs(gammaz),lower.tail = F)*2
-
-  beta_out <- cbind(aft_beta, betasd, betaz, beta.pval)
-  gamma_out <- cbind(logit_gamma, gammasd, gammaz, gamma.pval)
-  colnames(beta_out) <- c("Estimate","Std.Error","Z value","Pr(>|Z|)")
-  colnames(gamma_out) <- c("Estimate","Std.Error","Z value","Pr(>|Z|)")
-  val$pzllh <- penalised_likelihood(val)
-
-  cat("---------------------------------------------------------------------------")
-  cat("\nSemi-parametric Accelerated Failure Time Mixture Cure Model Using MPL\n")
-  cat(paste("\nPenalised log-likelihood:", round(val$pzllh,3),"\n"))
-  cat(paste("\nEstimated smoothing parameter:", round(val$lambda,3),"\n"))
-  cat("=====")
-  cat("\n")
-  cat("\nAccelerated Failure Time Model:\n")
-  print(beta_out)
-  cat("\n")
-  cat("=====")
-  cat("\nLogistic Model:\n")
-  print(gamma_out)
-  cat("---------------------------------------------------------------------------")
-  cat("\n")
   predicth <- list()
   predicth[["x"]] <- seq(0, max(val$k[val$deltaR==0]), 0.01)
   predicth[["h"]] <- h0(predicth[["x"]], val$theta, val$basis_params)
