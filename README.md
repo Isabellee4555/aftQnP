@@ -22,7 +22,7 @@ You can install the <code>aftQnP</code> package from
 
 ``` r
 install.packages("devtools")
-devtools::install_github("Isabellee4555/Isabel_Li_Mres_Thesis_Rcode")
+devtools::install_github("Isabellee4555/aftQnP")
 ```
 
 ## Fit a Model using a Simulated Dataset
