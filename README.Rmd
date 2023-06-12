@@ -56,18 +56,16 @@ summary(aft_fit)
 
 ## Make a Prediction
 ```{r}
-predict(aft_fit, x = c(1, -1), type = "survival", time = c(0.5, 1, 1.5), interval = TRUE)
+predict(aft_fit, x = NULL, type = "survival", time = c(0.5, 1, 1.5), interval = TRUE)
 ```
 
 
-## Plot a Predicted Survival Curve
-
+## Plot a Predicted Baseline Survival Curve
 ```{r survival}
-plot_sur(fit = aft_fit, x = c(1, -1))
+plot_sur(fit = aft_fit, x = NULL)
 ```
 
-## Plot a Predicted Hazard Curve
-
+## Plot a Predicted Baseline Hazard Curve
 ```{r hazard}
-plot_hz(fit = aft_fit, x = c(1, -1))
+plot_hz(fit = aft_fit, x = NULL)
 ```

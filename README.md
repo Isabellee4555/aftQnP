@@ -74,25 +74,25 @@ summary(aft_fit)
 ## Make a Prediction
 
 ``` r
-predict(aft_fit, x = c(1, -1), type = "survival", time = c(0.5, 1, 1.5), interval = TRUE)
-#>   times estimates     lower     upper
-#> 1   0.5 0.9721379 0.9636682 0.9806075
-#> 2   1.0 0.8900091 0.8629769 0.9170412
-#> 3   1.5 0.7071282 0.6579292 0.7563271
+predict(aft_fit, x = NULL, type = "survival", time = c(0.5, 1, 1.5), interval = TRUE)
+#>   times  estimates     lower      upper
+#> 1   0.5 0.88890025 0.8616654 0.91613514
+#> 2   1.0 0.41755969 0.3607609 0.47435851
+#> 3   1.5 0.03252873 0.0136310 0.05142647
 ```
 
-## Plot a Predicted Survival Curve
+## Plot a Predicted Baseline Survival Curve
 
 ``` r
-plot_sur(fit = aft_fit, x = c(1, -1))
+plot_sur(fit = aft_fit, x = NULL)
 ```
 
 <img src="man/figures/README-survival-1.png" style="display: block; margin: auto;" />
 
-## Plot a Predicted Hazard Curve
+## Plot a Predicted Baseline Hazard Curve
 
 ``` r
-plot_hz(fit = aft_fit, x = c(1, -1))
+plot_hz(fit = aft_fit, x = NULL)
 ```
 
 <img src="man/figures/README-hazard-1.png" style="display: block; margin: auto;" />
