@@ -62,7 +62,7 @@ h0_prime_2 <- function(y, theta, basis_params) c(psi_prime_2(y, basis_params) %*
 
 compute_basis_params <- function(val)
 {
-   range_k <- quantile(unique(val$k), c(0.05, 0.95))
+  range_k <- quantile(unique(val$k), c(0.05, 0.95))
   mu <- unname(quantile(range_k, seq(0, 1, length=val$num_knots)))
   sigma <- rep(diff(mu)[1]*0.7, val$num_knots)
 

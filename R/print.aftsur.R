@@ -1,5 +1,5 @@
 #' Print Fit Output for Semi-parametric Accelerated Failure Time Mixture Cure Model
-#' @description a function that print model result.
+#' @description a function that prints a model result.
 #' @param fit an object of class "aftsur", a model fitted by the \code{aftsur} function.
 #' @examples
 #' require(survival)

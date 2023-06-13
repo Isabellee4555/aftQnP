@@ -4,7 +4,7 @@
 #' @param formula a formula object to specify the covariates for the latency part of the mixture cure model. The response variable must be a \code{Surv} object obtained from the \code{survival} package.
 #' @param cure_var a formula object in which to specify the covariates for the incidence part of the mixture cure model.
 #' @param offset if offset is \code{FALSE}, an intercept term will be added into the incidence covariates. By default, \code{offset = FALSE}.
-#' @param lambda an initial value for the smoothing parameter. By default, lambda = $10^{-5}$.
+#' @param lambda an initial value for the smoothing parameter. By default, \code{lambda = 1e-5}.
 #' @param knots an integer which specifies the number of basis functions used to estimate the baseline hazard function. By default, \code{knots = 4} if the sample size is less than 500; \code{knots = 5} if the sample size is greater than 500 but less than 1000 and \code{knots = 6} if the sample size is greater or equal to 1000.
 #' @param data a data frame which includes survival times, covariates, censoring status.
 #' @return \code{aftsur} returns an object of class \code{"aftsur"}.
@@ -18,7 +18,8 @@
 #' aftsur(formula = formula_aft, cure_var = ~ Z1 + Z2 + Z3, offset = TRUE, data = simu_data)
 #' @export
 #' @importFrom stats dnorm lm pnorm quantile qweibull rbinom runif rweibull model.frame na.omit model.extract model.matrix
-#' @importFrom dplyr filter mutate
+#' @importFrom dplyr filter mutate case_when select
+#' @importFrom tibble tibble
 #' @importFrom survival Surv
 #'
 
@@ -28,7 +29,7 @@ aftsur <- function(formula, cure_var, offset = FALSE, lambda = 1e-5, knots = NUL
   deltaI <- y_tmp <- NULL
   n <- dim(data)[1]
 
-  num_knots <- ifelse(!is.null(knots), knots, case_when(
+  num_knots <- ifelse(!is.null(knots), knots, dplyr::case_when(
     n < 500 ~ 4,
     n >= 500 & n < 1000 ~ 5,
     n >= 1000 ~ 6

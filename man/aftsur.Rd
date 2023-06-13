@@ -13,7 +13,7 @@ aftsur(formula, cure_var, offset = FALSE, lambda = 1e-05, knots = NULL, data)
 
 \item{offset}{if offset is \code{FALSE}, an intercept term will be added into the incidence covariates. By default, \code{offset = FALSE}.}
 
-\item{lambda}{an initial value for the smoothing parameter. By default, lambda = $10^{-5}$.}
+\item{lambda}{an initial value for the smoothing parameter. By default, \code{lambda = 1e-5}.}
 
 \item{knots}{an integer which specifies the number of basis functions used to estimate the baseline hazard function. By default, \code{knots = 4} if the sample size is less than 500; \code{knots = 5} if the sample size is greater than 500 but less than 1000 and \code{knots = 6} if the sample size is greater or equal to 1000.}
 

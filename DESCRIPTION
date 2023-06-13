@@ -1,6 +1,6 @@
 Package: aftQnP
 Title: Semi-Parametric Accelerated Failture Time Mixture Cure Model
-Version: 0.0.1.0
+Version: 1.0.0
 Authors@R: 
     person(given = "Isabel",
            family = "Li",
@@ -14,6 +14,7 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Imports: 
     dplyr,
+    tibble,
     magrittr,
     stats,
     ggplot2,

@@ -20,7 +20,7 @@ If \code{time = NULL} (default), a sequence of estimates will be provided from t
 }
 \value{
 If \code{interval = FALSE}, a data frame that contain timepoints evaluated and estimates will be return.
-If \code{interval = TRUE}, two additional columns, lower and upper bound of 95\% confidence intervals will also be return.
+If \code{interval = TRUE}, two additional columns, representing the lower and upper bounds of the 95\% confidence intervals, will also be returned.
 }
 \description{
 a function that predicts survival or hazard from a semi-parametric AFT mixture cure model.

@@ -20,7 +20,7 @@
 #' predict(aft_fit, x = NULL, type = "survival", time = c(0.5, 1, 1.5), interval = TRUE)
 #' @returns
 #' If \code{interval = FALSE}, a data frame that contain timepoints evaluated and estimates will be return.
-#' If \code{interval = TRUE}, two additional columns, lower and upper bound of 95% confidence intervals will also be return.
+#' If \code{interval = TRUE}, two additional columns, representing the lower and upper bounds of the 95% confidence intervals, will also be returned.
 #' @export
 
 predict.aftsur <-

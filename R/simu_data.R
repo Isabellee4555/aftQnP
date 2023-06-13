@@ -1,6 +1,6 @@
 #' Simulated Partly Interval-censored Data
 #' @description A simulated partly interval-censored dataset.
-#' @format This dataset is in a tibble format and includes 500 simulated observations.
+#' @format \code{simu_data} is a tibble with 500 rows of simulated observations and 11 columns.
 #' \describe{
 #' \item{\code{X1, X2}}{latency covariates}
 #' \item{\code{Z1, Z2, Z3}}{incidence covariates, where \code{Z1} is an intercept term}

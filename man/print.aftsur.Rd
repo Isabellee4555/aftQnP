@@ -10,7 +10,7 @@
 \item{fit}{an object of class "aftsur", a model fitted by the \code{aftsur} function.}
 }
 \description{
-a function that print model result.
+a function that prints a model result.
 }
 \examples{
 require(survival)

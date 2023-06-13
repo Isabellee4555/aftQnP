@@ -79,8 +79,8 @@ summary.aftsur <- function(fit) {
   out
 }
 
-#' Summarising a Model Fit for Semi-parametric Accelerated Failure Time Mixture Cure Model
-#' @description a function that summaries model result.
+#' Printing Summary Output
+#' @description A function that prints the summary output for a model result.
 #' @param x an object of class "summary.aftsur".
 #' @export
 print.summary.aftsur <- function(x){

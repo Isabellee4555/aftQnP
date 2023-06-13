@@ -2,7 +2,7 @@
 % Please edit documentation in R/summary.aftsur.R
 \name{print.summary.aftsur}
 \alias{print.summary.aftsur}
-\title{Summarising a Model Fit for Semi-parametric Accelerated Failure Time Mixture Cure Model}
+\title{Printing Summary Output}
 \usage{
 \method{print}{summary.aftsur}(x)
 }
@@ -10,5 +10,5 @@
 \item{x}{an object of class "summary.aftsur".}
 }
 \description{
-a function that summaries model result.
+A function that prints the summary output for a model result.
 }
