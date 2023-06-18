@@ -9,7 +9,7 @@ plot_sur(fit, x = NULL)
 \arguments{
 \item{fit}{an object of class "aftsur". A model fitted by the \code{aftsur} function.}
 
-\item{x}{a vector of latency covariates that is used to estimate survival probabilities. If \code{x = NULL}, the baseline survival will be predicted.}
+\item{x}{an one-row dataframe which contains latency variables with the same data structure as the training data. If \code{x = NULL}, the baseline survival will be plotted.}
 }
 \value{
 a \code{ggplot2} object

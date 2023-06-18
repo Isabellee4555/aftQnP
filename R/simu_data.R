@@ -2,9 +2,9 @@
 #' @description A simulated partly interval-censored dataset.
 #' @format \code{simu_data} is a tibble with 500 rows of simulated observations and 11 columns.
 #' \describe{
-#' \item{\code{X1, X2}}{latency covariates}
-#' \item{\code{Z1, Z2, Z3}}{incidence covariates, where \code{Z1} is an intercept term}
-#' \item{\code{delta, deltaL, deltaL, deltaR}}{indicators for event, left, right, and interval-censoring}
+#' \item{\code{X1, X2}}{latency covariates, where \code{X1} is a binary covariate and \code{X2} is a continuous covariate.}
+#' \item{\code{Z1, Z2, Z3}}{incidence covariates, where \code{Z1} is an intercept term, \code{Z2} and \code{Z3} are continuous covariates.}
+#' \item{\code{delta, deltaL, deltaL, deltaR}}{indicators for event, left, right, and interval-censoring.}
 #' \item{\code{y_L, y_R}}{event and censoring times. For events, \code{y_L = y_R}. If the observation is left-censored, \code{y_L = NA}. If the observation is right-censored, \code{y_R = NA}.}
 #' }
 #' @docType data

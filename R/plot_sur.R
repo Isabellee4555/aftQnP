@@ -1,7 +1,7 @@
 #' Plot Predicted Survival Function
 #' @description a function that plots predicted survival probabilities from the semi-parametric AFT mixture cure model.
 #' @param fit an object of class "aftsur". A model fitted by the \code{aftsur} function.
-#' @param x a vector of latency covariates that is used to estimate survival probabilities. If \code{x = NULL}, the baseline survival will be predicted.
+#' @param x an one-row dataframe which contains latency variables with the same data structure as the training data. If \code{x = NULL}, the baseline survival will be plotted.
 #' @return a \code{ggplot2} object
 #' @examples
 #' require(survival)
@@ -15,9 +15,15 @@
 #' @export
 #' @import ggplot2
 plot_sur <- function(fit, x = NULL){
-  X_base <-  if(is.null(x)){
-    rep(0, length(fit$beta))
-  }else{x}
+  X_base <-  if (is.null(x)) {
+    matrix(0, ncol = length(fit$beta))
+  } else{
+
+    if (!is.data.frame(x)| nrow(x)!=1){
+      stop("x needs to be supplied as an one-row dataframe that contains latency variable with the same structure as the training data.")
+    }
+    model.matrix(fit$call$latency[-2], x)[,-1]
+  }
   const <- exp(-X_base%*%fit$beta)
   max_event_t <-
     quantile(fit$k[fit$deltaR == 0] * c(exp(X_base %*% fit$beta)), 0.99)

@@ -9,7 +9,7 @@
 \arguments{
 \item{fit}{an object of class "aftsur", a model fitted by the \code{aftsur} function.}
 
-\item{x}{a vector of latency covariates that is used to estimate survival or hazard rates. If \code{x = NULL}, the baseline survival or hazard will be predicted.}
+\item{x}{a dataframe which contains latency variables with the same data structure as the training data. If \code{x = NULL}, the baseline survival or hazard will be predicted.}
 
 \item{type}{a character string to indicate type of prediction. Either "survival" or "hazard" should be supplied.}
 
@@ -36,6 +36,8 @@ data("simu_data")
 formula_aft <- Surv(y_L, y_R, type = "interval2") ~ X1 + X2 - 1
 # fit a model
 aft_fit <- aftsur(formula = formula_aft, cure_var = ~ Z1 + Z2 + Z3, offset = TRUE, data = simu_data)
-# make prediction
+# make prediction for the baseline survival at time 0.5, 1 and 1.5
 predict(aft_fit, x = NULL, type = "survival", time = c(0.5, 1, 1.5), interval = TRUE)
+# make prediction using the first 5 observations from the training data at time 0.5
+predict(aft_fit, x = simu_data[1:5, c("X1", "X2")], type = "survival", time = c(0.5), interval = TRUE)
 }

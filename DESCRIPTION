@@ -19,3 +19,5 @@ Imports:
     stats,
     ggplot2,
     survival
+Depends: 
+    R (>= 2.10)

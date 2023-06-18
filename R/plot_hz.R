@@ -1,7 +1,7 @@
 #' Plot Predicted Hazard Function
 #' @description a function that plots predicted hazard rates from the semi-parametric AFT mixture cure model.
 #' @param fit an object of class "aftsur". A model fitted by the \code{aftsur} function.
-#' @param x a vector of latency covariates that is used to estimate hazard rates. If \code{x = NULL}, the baseline hazard will be predicted.
+#' @param x an one-row dataframe which contains latency variables with the same data structure as the training data. If \code{x = NULL}, the baseline hazard will be plotted.
 #' @return a \code{ggplot2} object
 #' @examples
 #' require(survival)
@@ -15,11 +15,18 @@
 #' @export
 #' @import ggplot2
 plot_hz <- function(fit, x = NULL){
-  X_base <-  if(is.null(x)){
-    rep(0, length(fit$beta))
-  }else{x}
+  X_base <-  if (is.null(x)) {
+    matrix(0, ncol = length(fit$beta))
+  } else{
+
+    if (!is.data.frame(x)| nrow(x)!=1){
+      stop("x needs to be supplied as an one-row dataframe that contains latency variable with the same structure as the training data.")
+    }
+    model.matrix(fit$call$latency[-2], x)[,-1]
+  }
   const <- exp(-X_base%*%fit$beta)
-  max_event_t <- max(fit$k[fit$delta==1]* c(exp(X_base%*%fit$beta)))
+  max_event_t <-
+    quantile(fit$k[fit$deltaR == 0] * c(exp(X_base %*% fit$beta)), 0.99)
   t_grid <- seq(0, max_event_t, 0.01)
   h_vals <- h0(t_grid%*%const, fit$theta, fit$basis_params)*c(const)
   asy_h_sd <- sqrt(diag(compute_hazard_covariance(fit, compute_covariance_matrix(fit,return_F = T), t_grid%*%const)))

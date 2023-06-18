@@ -6,7 +6,7 @@
 #' @param offset if offset is \code{FALSE}, an intercept term will be added into the incidence covariates. By default, \code{offset = FALSE}.
 #' @param lambda an initial value for the smoothing parameter. By default, \code{lambda = 1e-5}.
 #' @param knots an integer which specifies the number of basis functions used to estimate the baseline hazard function. By default, \code{knots = 4} if the sample size is less than 500; \code{knots = 5} if the sample size is greater than 500 but less than 1000 and \code{knots = 6} if the sample size is greater or equal to 1000.
-#' @param data a data frame which includes survival times, covariates, censoring status.
+#' @param data a data frame which includes survival times, covariates, censoring statuses. Covairates can be numerical or categorical. If categorical variables are supplied, these variables should be a class of \code{Factor}. Censoring statuses need to be either \code{0} or \code{1}.
 #' @return \code{aftsur} returns an object of class \code{"aftsur"}.
 #' @examples
 #' require(survival)
@@ -39,12 +39,32 @@ aftsur <- function(formula, cure_var, offset = FALSE, lambda = 1e-5, knots = NUL
   m_rsp <- model.extract(m_f,"response")
   time_tab <- m_rsp[,1:2]
   colnames(time_tab) <- c("y", "y_tmp")
+
   #Z X
+  Z <- model.matrix(cure_var, data = data)
+
+  fac_ind <- data %>%
+    select(attr(terms(cure_var), "term.labels")) %>%
+    sapply(., is.factor)
+
   cure_name <- all.vars(cure_var)
-  Z <- as.matrix(cbind(rep(1,n),data[,cure_name]))
-  colnames(Z) <- c("intercept.z", cure_name)
-  if(offset == TRUE){Z <- as.matrix(data[,cure_name])}
+
+  if(offset == TRUE | any(fac_ind)){
+    Z <- Z[, -1]
+  }else{
+    colnames(Z) <- c("intercept.z", colnames(Z)[-1])
+  }
+
   X <- model.matrix(attr(m_f,"terms"), m_f)
+
+  fac_ind <- data %>%
+    select(attr(terms(formula), "term.labels")) %>%
+    sapply(., is.factor)
+
+  if(any(fac_ind)){
+    X <- X[,-1]
+  }
+
   # cured
   fac_status <- factor(m_rsp[,3], levels = c(1, 2, 0, 3))
   ces_status <- model.matrix(~ fac_status - 1)
