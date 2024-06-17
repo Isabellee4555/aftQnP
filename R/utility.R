@@ -62,14 +62,14 @@ h0_prime_2 <- function(y, theta, basis_params) c(psi_prime_2(y, basis_params) %*
 
 compute_basis_params <- function(val)
 {
-  range_k <- quantile(unique(val$k), c(0.05, 0.95))
+  range_k <- quantile(unique(val$k), c(0.05, 0.9))
   mu <- unname(quantile(range_k, seq(0, 1, length=val$num_knots)))
   sigma <- rep(diff(mu)[1]*0.7, val$num_knots)
 
   return(list(mu=mu, sigma=sigma))
 }
 
-compute_R_matrix <- function(val, integral_delta=0.01, length_out = 500)#, length_out = 500
+compute_R_matrix <- function(val, integral_delta=0.01, length_out = 500)
 {
   upper_bound <- max(val$k)
   x_grid <- seq(min(val$k), upper_bound, length.out = length_out)
