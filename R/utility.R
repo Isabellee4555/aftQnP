@@ -62,7 +62,7 @@ h0_prime_2 <- function(y, theta, basis_params) c(psi_prime_2(y, basis_params) %*
 
 compute_basis_params <- function(val)
 {
-  range_k <- quantile(unique(val$k), c(0.05, 0.9))
+  range_k <- quantile(unique(val$k), val$range)
   mu <- unname(quantile(range_k, seq(0, 1, length=val$num_knots)))
   sigma <- rep(diff(mu)[1]*0.7, val$num_knots)
 
@@ -78,11 +78,11 @@ compute_R_matrix <- function(val, integral_delta=0.01, length_out = 500)
   return(t(psi_prime_2_mat) %*% psi_prime_2_mat * integral_delta)
 }
 
-initialise_values_list <- function(X, Z, y, delta, deltaL, deltaR, deltaI_L, deltaI_R, beta, gamma, theta, lambda, num_knots=5, basis_params=NULL)
+initialise_values_list <- function(X, Z, y, delta, deltaL, deltaR, deltaI_L, deltaI_R, beta, gamma, theta, lambda, num_knots=5, basis_params=NULL, range)
 {
   val <- list(X=X, Z=Z, y=y,
               delta=delta, deltaL=deltaL, deltaR=deltaR, deltaI_L=deltaI_L, deltaI_R=deltaI_R,
-              beta=beta, gamma=gamma, theta=theta, lambda=lambda, num_knots=num_knots)
+              beta=beta, gamma=gamma, theta=theta, lambda=lambda, num_knots=num_knots, range = range)
 
   val$k <- c(y * exp(-X %*% beta))
   if(is.null(basis_params)) basis_params <- compute_basis_params(val)

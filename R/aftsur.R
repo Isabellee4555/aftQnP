@@ -7,6 +7,7 @@
 #' @param lambda an initial value for the smoothing parameter. By default, \code{lambda = 1e-5}.
 #' @param knots an integer which specifies the number of basis functions used to estimate the baseline hazard function. By default, \code{knots = 4} if the sample size is less than 500; \code{knots = 5} if the sample size is greater than 500 but less than 1000 and \code{knots = 6} if the sample size is greater or equal to 1000.
 #' @param data a data frame which includes survival times, covariates, censoring statuses. Covairates can be numerical or categorical. If categorical variables are supplied, these variables should be a class of \code{Factor}. Censoring statuses need to be either \code{0} or \code{1}.
+#' @param basis_range A range of quantile basis functions should be chosen from the accelerated time.
 #' @return \code{aftsur} returns an object of class \code{"aftsur"}.
 #' @examples
 #' require(survival)
@@ -25,7 +26,7 @@
 
 
 
-aftsur <- function(formula, cure_var, offset = FALSE, lambda = 1e-5, knots = NULL, data){
+aftsur <- function(formula, cure_var, offset = FALSE, lambda = 1e-5, knots = NULL, data, basis_range = c(0.05, 0.9)){
   deltaI <- y_tmp <- NULL
   n <- dim(data)[1]
 
@@ -48,6 +49,12 @@ aftsur <- function(formula, cure_var, offset = FALSE, lambda = 1e-5, knots = NUL
     sapply(., is.factor)
 
   cure_name <- all.vars(cure_var)
+
+  # if(offset == TRUE){
+  #   Z <- Z[, -1]
+  # }else{
+  #   colnames(Z) <- c("intercept.z", colnames(Z)[-1])
+  # }
 
   if(offset == TRUE | any(fac_ind)){
     Z <- Z[, -1]
@@ -75,9 +82,9 @@ aftsur <- function(formula, cure_var, offset = FALSE, lambda = 1e-5, knots = NUL
   data_ <- rbind(data_sur, data_append) %>% select(-y_tmp)
 
   X <- as.matrix(data_[, colnames(data.frame(X))])
-  if("X.Intercept." %in% colnames(X)){colnames(X)[1] <- c("(intercept)")}
+  colnames(X)[colnames(X) == "X.Intercept."] <- "(intercept)"
   Z <- as.matrix(data_[, colnames(Z)])
-  if("intercept.z" %in% colnames(Z)){colnames(Z)[1] <- c("(intercept)")}
+  colnames(Z)[colnames(Z) == "intercept.z"] <- "(intercept)"
   y <- data_$y
   delta <- data_$delta
   deltaL <- data_$deltaL
@@ -96,7 +103,7 @@ aftsur <- function(formula, cure_var, offset = FALSE, lambda = 1e-5, knots = NUL
   theta <- rep(1,  num_knots)
   val <- initialise_values_list(X, Z, y,
                                 delta, deltaL, deltaR, deltaI_L, deltaI_R,
-                                beta, gamma, theta, lambda, num_knots)
+                                beta, gamma, theta, lambda, num_knots, range = basis_range)
   ctr <- j <- 1
   while(j < max_lambda_update)
   {

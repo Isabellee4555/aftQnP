@@ -4,7 +4,15 @@
 \alias{aftsur}
 \title{Semi-parametric Accelerated Failure Time Mixture Cure Model}
 \usage{
-aftsur(formula, cure_var, offset = FALSE, lambda = 1e-05, knots = NULL, data)
+aftsur(
+  formula,
+  cure_var,
+  offset = FALSE,
+  lambda = 1e-05,
+  knots = NULL,
+  data,
+  basis_range = c(0.05, 0.9)
+)
 }
 \arguments{
 \item{formula}{a formula object to specify the covariates for the latency part of the mixture cure model. The response variable must be a \code{Surv} object obtained from the \code{survival} package.}
@@ -18,6 +26,8 @@ aftsur(formula, cure_var, offset = FALSE, lambda = 1e-05, knots = NULL, data)
 \item{knots}{an integer which specifies the number of basis functions used to estimate the baseline hazard function. By default, \code{knots = 4} if the sample size is less than 500; \code{knots = 5} if the sample size is greater than 500 but less than 1000 and \code{knots = 6} if the sample size is greater or equal to 1000.}
 
 \item{data}{a data frame which includes survival times, covariates, censoring statuses. Covairates can be numerical or categorical. If categorical variables are supplied, these variables should be a class of \code{Factor}. Censoring statuses need to be either \code{0} or \code{1}.}
+
+\item{basis_range}{A range of quantile basis functions should be chosen from the accelerated time.}
 }
 \value{
 \code{aftsur} returns an object of class \code{"aftsur"}.
