@@ -50,17 +50,17 @@ aftsur <- function(formula, cure_var, offset = FALSE, lambda = 1e-5, knots = NUL
 
   cure_name <- all.vars(cure_var)
 
-  # if(offset == TRUE){
-  #   Z <- Z[, -1]
-  # }else{
-  #   colnames(Z) <- c("intercept.z", colnames(Z)[-1])
-  # }
-
-  if(offset == TRUE | any(fac_ind)){
+  if(offset == TRUE){
     Z <- Z[, -1]
   }else{
     colnames(Z) <- c("intercept.z", colnames(Z)[-1])
   }
+
+  # if(offset == TRUE | any(fac_ind)){
+  #   Z <- Z[, -1]
+  # }else{
+  #   colnames(Z) <- c("intercept.z", colnames(Z)[-1])
+  # }
 
   X <- model.matrix(attr(m_f,"terms"), m_f)
 
@@ -68,7 +68,7 @@ aftsur <- function(formula, cure_var, offset = FALSE, lambda = 1e-5, knots = NUL
     select(attr(terms(formula), "term.labels")) %>%
     sapply(., is.factor)
 
-  if(any(fac_ind)){
+  if(any(fac_ind) & (!"(Intercept)" %in% colnames(X))){
     X <- X[,-1]
   }
 
@@ -189,7 +189,7 @@ aftsur <- function(formula, cure_var, offset = FALSE, lambda = 1e-5, knots = NUL
     } # inner loop ends
     if(ctr > MAX_CTR)
     {
-      print("Max Iteration Reached")
+      # print("Max Iteration Reached")
       break
     }
     # break
