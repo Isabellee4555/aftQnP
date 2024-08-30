@@ -212,6 +212,7 @@ aftsur <- function(formula, cure_var, offset = FALSE, lambda = 1e-5, knots = NUL
   predicth[["x"]] <- seq(0, max(val$k[val$deltaR==0]), 0.01)
   predicth[["h"]] <- h0(predicth[["x"]], val$theta, val$basis_params)
   val$predicth <- predicth
+  val$num_iterations <- ctr
   val
   invisible(val)
 
